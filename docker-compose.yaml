@@ -1,0 +1,136 @@
+version: "3.8"
+services:
+  zookeeper-1:
+    container_name: "zookeeper-1"
+    image: confluentinc/cp-zookeeper:7.1.2
+    environment:
+      ZOOKEEPER_SERVER_ID: "1"
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+      KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=*
+      KAFKA_JMX_PORT: 40001
+      KAFKA_JMX_HOSTNAME: localhost
+    ports:
+      - 2181:2181
+      - 40001:40001
+    cap_add:
+      - NET_ADMIN
+
+  zookeeper-2:
+    container_name: "zookeeper-2"
+    image: confluentinc/cp-zookeeper:7.1.2
+    hostname: zookeeper-2
+    environment:
+      ZOOKEEPER_SERVER_ID: "2"
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+      KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=*
+      KAFKA_JMX_PORT: 40001
+      KAFKA_JMX_HOSTNAME: localhost
+    ports:
+      - 2182:2181
+    cap_add:
+      - NET_ADMIN
+
+  zookeeper-3:
+    container_name: "zookeeper-3"
+    image: confluentinc/cp-zookeeper:7.1.2
+    hostname: zookeeper-3
+    environment:
+      ZOOKEEPER_SERVER_ID: "3"
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+      KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=*
+      KAFKA_JMX_PORT: 40001
+      KAFKA_JMX_HOSTNAME: localhost
+    ports:
+      - 2183:2181
+    cap_add:
+      - NET_ADMIN
+
+  kafka-1:
+    container_name: "kafka-1"
+    image: confluentinc/cp-server:7.1.2
+    hostname: kafka-1
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-1:9092"
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: "1"
+      KAFKA_BROKER_ID: "1"
+      #KAFKA_BROKER_RACK: rack-a
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_JMX_PORT: 30001
+      KAFKA_JMX_HOSTNAME: localhost
+    ports:
+      - 9091:9092
+      - 30001:30001
+    cap_add:
+      - NET_ADMIN
+
+  kafka-2:
+    container_name: "kafka-2"
+    image: confluentinc/cp-server:7.1.2
+    hostname: kafka-2
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-2:9092"
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: "1"
+      KAFKA_BROKER_ID: "2"
+      #KAFKA_BROKER_RACK: rack-a
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_JMX_PORT: 30001
+      KAFKA_JMX_HOSTNAME: localhost
+    ports:
+      - 9092:9092
+    cap_add:
+      - NET_ADMIN
+
+  kafka-3:
+    container_name: "kafka-3"
+    image: confluentinc/cp-server:7.1.2
+    hostname: kafka-3
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-3:9092"
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: "1"
+      KAFKA_BROKER_ID: "3"
+      #KAFKA_BROKER_RACK: rack-b
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+    ports:
+      - 9093:9092
+    cap_add:
+      - NET_ADMIN
+
+  kafka-4:
+    container_name: "kafka-4"
+    image: confluentinc/cp-server:7.1.2
+    hostname: kafka-4
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-4:9092"
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: "1"
+      KAFKA_BROKER_ID: "4"
+      #KAFKA_BROKER_RACK: rack-b
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_JMX_PORT: 30001
+      KAFKA_JMX_HOSTNAME: localhost
+    ports:
+      - 9094:9092
+    cap_add:
+      - NET_ADMIN
