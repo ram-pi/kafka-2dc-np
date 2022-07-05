@@ -134,3 +134,12 @@ services:
       - 9094:9092
     cap_add:
       - NET_ADMIN
+
+  zoonavigator:
+    container_name: zoonavigator
+    hostname: zoonavigator
+    ports:
+      - '19000:9000'
+    environment:
+      - HTTP_PORT=9000
+    image: 'elkozmon/zoonavigator:latest'
