@@ -2,7 +2,7 @@ version: "3.8"
 services:
   zookeeper-1:
     container_name: "zookeeper-1"
-    image: confluentinc/cp-zookeeper:7.1.2
+    image: confluentinc/cp-zookeeper:${TAG}
     environment:
       ZOOKEEPER_SERVER_ID: "1"
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -18,7 +18,7 @@ services:
 
   zookeeper-2:
     container_name: "zookeeper-2"
-    image: confluentinc/cp-zookeeper:7.1.2
+    image: confluentinc/cp-zookeeper:${TAG}
     hostname: zookeeper-2
     environment:
       ZOOKEEPER_SERVER_ID: "2"
@@ -34,7 +34,7 @@ services:
 
   zookeeper-3:
     container_name: "zookeeper-3"
-    image: confluentinc/cp-zookeeper:7.1.2
+    image: confluentinc/cp-zookeeper:${TAG}
     hostname: zookeeper-3
     environment:
       ZOOKEEPER_SERVER_ID: "3"
@@ -50,7 +50,7 @@ services:
 
   kafka-1:
     container_name: "kafka-1"
-    image: confluentinc/cp-server:7.1.2
+    image: confluentinc/cp-server:${TAG}
     hostname: kafka-1
     depends_on:
       - zookeeper-1
@@ -73,7 +73,7 @@ services:
 
   kafka-2:
     container_name: "kafka-2"
-    image: confluentinc/cp-server:7.1.2
+    image: confluentinc/cp-server:${TAG}
     hostname: kafka-2
     depends_on:
       - zookeeper-1
@@ -95,7 +95,7 @@ services:
 
   kafka-3:
     container_name: "kafka-3"
-    image: confluentinc/cp-server:7.1.2
+    image: confluentinc/cp-server:${TAG}
     hostname: kafka-3
     depends_on:
       - zookeeper-1
@@ -115,7 +115,7 @@ services:
 
   kafka-4:
     container_name: "kafka-4"
-    image: confluentinc/cp-server:7.1.2
+    image: confluentinc/cp-server:${TAG}
     hostname: kafka-4
     depends_on:
       - zookeeper-1
