@@ -30,15 +30,24 @@ echo "Current time: $(date +%T)"
 echo "Zookeeper status"
 zookeeper_mode zookeeper-1 zookeeper-2 zookeeper-3
 
-echo "Kafka topic leader"
-docker exec kafka-1 bash -c "kafka-topics --bootstrap-server kafka-1:9092,kafka-2:9092,kafka-3:9092,kafka-4:9092 --describe --topic test"
+sleep 5
 
-echo "Producing..."
+echo "Topic describe..."
+kafka-topics --bootstrap-server localhost:9091 --describe --topic test
+#docker exec kafka-1 bash -c "kafka-topics --bootstrap-server kafka-1:9092,kafka-2:9092,kafka-3:9092,kafka-4:9092 --describe --topic test"
+
+echo "Producing from broker-1 (DC-1)..."
 docker exec kafka-1 bash -c "echo broker-1 $(date) | kafka-console-producer --bootstrap-server localhost:9092 --topic test --request-required-acks -1"
+echo "Producing from broker-2 (DC-1)..."
 docker exec kafka-2 bash -c "echo broker-2 $(date) | kafka-console-producer --bootstrap-server localhost:9092 --topic test --request-required-acks -1"
+echo "Producing from broker-3 (DC-2)..."
 docker exec kafka-3 bash -c "echo broker-3 $(date) | kafka-console-producer --bootstrap-server localhost:9092 --topic test --request-required-acks -1"
+echo "Producing from broker-4 (DC-2)..."
 docker exec kafka-4 bash -c "echo broker-4 $(date) | kafka-console-producer --bootstrap-server localhost:9092 --topic test --request-required-acks -1"
 
-echo "Consuming..."
+echo "Consuming from broker-1 (DC-1)..."
 docker exec kafka-1 bash -c "kafka-console-consumer --bootstrap-server localhost:9092 --topic test --from-beginning --timeout-ms 10000"
+echo "Consuming from broker-3 (DC-2)..."
 docker exec kafka-3 bash -c "kafka-console-consumer --bootstrap-server localhost:9092 --topic test --from-beginning --timeout-ms 10000"
+echo "Consuming from host..."
+kafka-console-consumer --bootstrap-server localhost:9091,localhost:29092,localhost:9093,localhost:9094 --topic test --from-beginning --timeout-ms 5000
